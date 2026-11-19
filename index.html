@@ -66,6 +66,27 @@
 </div>
 
 <script>
+/* ---------- Registro de respuestas en Google Sheets ----------
+   Pega aquí la URL /exec de la aplicación web de Apps Script (ver Codigo.gs).
+   Si queda vacía, la encuesta funciona igual pero no registra respuestas. */
+const ENDPOINT = '';
+
+function registrar(d, r){
+  if (!ENDPOINT) return;
+  const txt = k => { const q = Q.find(x=>x.k===k); const a = S.a[k];
+    return Array.isArray(a) ? a.map(j=>q.o[j][0]).join(' / ') : (a===undefined ? '' : q.o[a][0]); };
+  const productos = [...r.am, ...r.pm, ...r.wk].map(x=>x.p.n).filter((p,i,a)=>a.indexOf(p)===i).join(' | ');
+  const datos = {
+    pregunta1: txt('q1'), pregunta2: txt('q2'), pregunta3: txt('q3'),
+    pregunta4: txt('q4'), pregunta5: txt('q5'), pregunta6: txt('q6'),
+    tipoPiel: TYPE_NAME[d.type], sensible: d.sens ? 'Sí' : 'No', productos
+  };
+  try {
+    fetch(ENDPOINT, { method:'POST', mode:'no-cors',
+      headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(datos) }).catch(()=>{});
+  } catch(e) {}
+}
+
 /* ---------- Productos disponibles en Preunic (maestra de cobertura BDF) ----------
    n = nombre, c = código Preunic (SKU), img = URL de la foto (opcional) */
 const P = {
@@ -276,6 +297,7 @@ function routine(d){
 
 function result(){
   const d = diagnose(); const r = routine(d);
+  registrar(d, r);
   const tags = `<span class="tag">Piel ${TYPE_NAME[d.type].toLowerCase()}${d.sens?' y sensible':''}</span>` + d.concerns.map(c=>`<span class="tag alt">${CONCERN[c]}</span>`).join('');
   let n = 0;
   const block = (title, arr) => arr.length ? `<div class="moment"><h3>${title}</h3>${arr.map(x=>`
