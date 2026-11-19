@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Descubre tu rutina NIVEA – Encuesta de tipo de piel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#0033A0; --navy:#001E78; --ice:#EEF2FB; --line:#D6DEF2; --ink:#17203A; --muted:#5A6482;
+    --white:#fff; --accent:#C8102E; --ok:#1E7B4D;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--ice);color:var(--ink);font-family:'Nunito Sans',Arial,sans-serif}
+  .app{max-width:480px;margin:0 auto;min-height:100vh;background:var(--white);display:flex;flex-direction:column}
+  header{background:var(--blue);color:#fff;padding:18px 22px 20px}
+  .brand{font-weight:800;letter-spacing:.12em;font-size:15px}
+  .brand small{font-weight:600;letter-spacing:.02em;opacity:.85;margin-left:8px}
+  main{flex:1;padding:22px}
+  h1{font-size:27px;line-height:1.15;margin:6px 0 10px;color:var(--navy)}
+  h2{font-size:21px;line-height:1.25;margin:0 0 16px;color:var(--navy)}
+  p{line-height:1.5;margin:0 0 14px}
+  .lead{color:var(--muted);font-size:16px}
+  .btn{display:block;width:100%;border:0;border-radius:999px;padding:15px 18px;font:700 16px 'Nunito Sans',Arial;cursor:pointer;background:var(--blue);color:#fff}
+  .btn:disabled{opacity:.35;cursor:default}
+  .btn.ghost{background:transparent;color:var(--blue);border:2px solid var(--blue)}
+  .row{display:flex;gap:10px;margin-top:18px}
+  .row .btn{flex:1}
+  .steps-intro{list-style:none;padding:0;margin:20px 0 26px}
+  .steps-intro li{display:flex;gap:12px;align-items:center;margin-bottom:12px;font-size:15px}
+  .dot{flex:none;width:32px;height:32px;border-radius:50%;background:var(--ice);color:var(--blue);font-weight:800;display:grid;place-items:center}
+  .progress{height:6px;background:var(--ice);border-radius:9px;overflow:hidden;margin-bottom:8px}
+  .progress span{display:block;height:100%;background:var(--blue);transition:width .25s}
+  .qcount{font-size:13px;color:var(--muted);margin-bottom:14px;font-weight:600}
+  .opts{display:flex;flex-direction:column;gap:10px}
+  .opt{text-align:left;border:2px solid var(--line);background:#fff;border-radius:14px;padding:14px 16px;font:600 15px 'Nunito Sans',Arial;color:var(--ink);cursor:pointer;line-height:1.35}
+  .opt small{display:block;font-weight:400;color:var(--muted);margin-top:2px}
+  .opt.sel{border-color:var(--blue);background:var(--ice)}
+  .result-top{background:var(--ice);border-radius:18px;padding:18px;margin-bottom:18px}
+  .tag{display:inline-block;background:var(--blue);color:#fff;border-radius:999px;padding:4px 12px;font-size:13px;font-weight:700;margin:0 6px 6px 0}
+  .tag.alt{background:#fff;color:var(--blue);border:1.5px solid var(--blue)}
+  .switch{display:flex;background:var(--ice);border-radius:999px;padding:4px;margin:6px 0 18px}
+  .switch button{flex:1;border:0;background:transparent;border-radius:999px;padding:10px;font:700 14px 'Nunito Sans',Arial;color:var(--blue);cursor:pointer}
+  .switch button.on{background:var(--blue);color:#fff}
+  .moment{margin-bottom:22px}
+  .moment h3{font-size:16px;margin:0 0 10px;color:var(--navy);display:flex;align-items:center;gap:8px}
+  .card{display:flex;gap:12px;border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+  .thumb{flex:none;width:64px;height:64px;object-fit:contain;border-radius:10px;background:#fff}
+  .num{flex:none;width:28px;height:28px;border-radius:50%;background:var(--blue);color:#fff;font-weight:800;font-size:14px;display:grid;place-items:center;margin-top:2px}
+  .step{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+  .prod{font-weight:800;font-size:15px;margin:2px 0 3px;color:var(--ink)}
+  .why{font-size:14px;color:var(--muted);line-height:1.4}
+  .note{font-size:13px;color:var(--muted);line-height:1.45;border-top:1px solid var(--line);padding-top:14px;margin-top:8px}
+  .list{background:var(--ice);border-radius:14px;padding:14px 16px;margin:4px 0 18px}
+  .list li{margin:6px 0;font-size:14px}
+  footer{padding:14px 22px 22px;font-size:12px;color:var(--muted)}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+<div class="app">
+  <header><div class="brand">NIVEA <small>× Preunic</small></div></header>
+  <main id="view"></main>
+  <footer>Recomendación cosmética referencial. Si tienes una condición dermatológica o una reacción a un producto, consulta a un dermatólogo.</footer>
+</div>
+
+<script>
+/* ---------- Productos disponibles en Preunic (maestra de cobertura BDF) ----------
+   n = nombre, c = código Preunic (SKU), img = URL de la foto (opcional) */
+const P = {
+  micSeca:   {n:'NIVEA Agua Micelar Hidratante Piel Seca 400 ml', c:'585739', img:'https://assets.beiersdorf.com/-/media/images/3/b/2/1/283820edc2934181b5b959cf49e275a5-online_1180_png.png'},
+  micSens:   {n:'NIVEA Agua Micelar 400 ml', c:'4150086', img:'https://assets.beiersdorf.com/-/media/images/3/a/7/c/c446ce33f21a4951a95f2e2ede59401f-online_1180_png.png'},
+  gelRoses:  {n:'NIVEA Rose Care Gel Limpiador Micelar con Agua de Rosas 150 ml', c:'575516', img:'https://img.nivea.com/-/media/miscellaneous/media-center-items/2/d/3/019e74f92b7b7ed7ba1b62e598ce9a74-web_1010x1180_transparent_png.png'},
+  gelDerma:  {n:'NIVEA Derma Skin Clear Gel Limpiador Profundo Anti-imperfecciones', c:'592331', img:'https://img.nivea.com/-/media/miscellaneous/media-center-items/2/9/d/d0f6f5c739154fd7bc7c844709dc4b64-web_1010x1180_transparent_png.png'},
+  micDerma:  {n:'NIVEA Derma Skin Clear Agua Micelar Bifásica 400 ml', c:'592329', img:'https://assets.beiersdorf.com/-/media/images/b/3/1/3/41b9513da67b4fee8fe897fa1a3fdd80-web_1010x1180_transparent_png.png'},
+  gelGlow:   {n:'NIVEA Skin Glow Gel de Limpieza 150 ml', c:'595229', img:'https://img.nivea.com/-/media/miscellaneous/media-center-items/1/9/9/e53d65db945a4297a87aa7ceff190dbc-web_1010x1180_transparent_png.png'},
+  micIlum:   {n:'NIVEA Agua Micelar Limpieza Iluminadora con Sérum 400 ml', c:'587894', img:'https://img.nivea.com/-/media/miscellaneous/media-center-items/1/6/3/9b26d42f169242ae889db33040e7837c-screen.jpg'},
+  micRegen:  {n:'NIVEA Agua Micelar Regeneradora con Sérum 400 ml', c:'587893'},
+  mistRoses: {n:'NIVEA Rose Care Mist Agua Facial 150 ml', c:'576386'},
+  tonGlow:   {n:'NIVEA Luminous Skin Glow Tónico Exfoliante 100 ml', c:'591791', img:'https://img.nivea.com/-/media/miscellaneous/media-center-items/6/c/0/0500c8e2469f45a3885d80bdbab8a6bb-screen.jpg'},
+  serDerma:  {n:'NIVEA Derma Skin Clear Sérum Anti-imperfecciones', c:'592332', img:'https://assets.beiersdorf.com/-/media/images/c/f/3/4/2b780dae79eb4cb1abac789ff0fbc7fa-web_1010x1180_transparent_png.png'},
+  serLum:    {n:'NIVEA Cellular Luminous 630 Sérum Anti-manchas 30 ml', c:'577085'},
+  serGlow:   {n:'NIVEA Luminous Even Glow Sérum 30 ml', c:'591792', img:'https://assets.beiersdorf.com/-/media/images/f/7/6/7/33ce663fc8834034b546befea5e13609-screen.jpg'},
+  serQ10:    {n:'NIVEA Q10 Dual Sérum 30 ml', c:'587897', img:'https://assets.beiersdorf.com/-/media/images/6/e/9/b/bc1856b320ff422cb43478b9c23f3114-web_1010x1180_transparent_png.png'},
+  serEpi:    {n:'NIVEA Cellular Epigenetics Sérum 30 ml', c:'593006', img:'https://assets.beiersdorf.com/-/media/images/8/b/5/7/c4a4b4cfde9b45b0a80d3a2cb9f30343-web_1010x1180_transparent_png.png'},
+  diaSeca:   {n:'NIVEA Visage Crema Intensiva Día 50 ml', c:'25134'},
+  diaNormal: {n:'NIVEA Visage Crema Activa Día 50 ml', c:'25133'},
+  diaRoses:  {n:'NIVEA Rose Care Crema Hidratante en Gel con Ácido Hialurónico 50 ml', c:'576387'},
+  diaDerma:  {n:'NIVEA Derma Skin Clear Daily Fluido Anti-imperfecciones FPS 50+ 40 ml', c:'593752', img:'https://assets.beiersdorf.com/-/media/images/1/c/7/b/462a984f888a4196bd851511d9f59fc0-web_1010x1180_transparent_png.png'},
+  diaQ10:    {n:'NIVEA Q10 Power Crema Antiarrugas Día con FPS 50 ml', c:'29105'},
+  diaEpi:    {n:'NIVEA Cellular Epigenetics Crema Día Rejuvenecedora FPS 30', c:'596446', img:'https://assets.beiersdorf.com/-/media/images/d/e/3/5/f60331828138439294f2eccc1df25ea7-web_1010x1180_transparent_png.png'},
+  nocheSeca: {n:'NIVEA Visage Crema Nutritiva Noche 50 ml', c:'28161'},
+  nocheQ10:  {n:'NIVEA Q10 Power Crema Antiarrugas Noche 50 ml', c:'29131'},
+  nocheLum:  {n:'NIVEA Cellular Luminous 630 Crema de Noche Anti-manchas', c:'581208', img:'https://assets.beiersdorf.com/-/media/images/e/f/4/6/01a0c95bc348709ea8eb7064f49e7ee5-screen.jpg'},
+  nocheEpi:  {n:'NIVEA Cellular Epigenetics Crema de Noche Rejuvenecedora', c:'596442', img:'https://assets.beiersdorf.com/-/media/images/4/9/c/8/ce369a4304394dd48309849b3ce7c9a9-online_1180_png.png'},
+  ojosQ10:   {n:'NIVEA Q10 Power Contorno de Ojos 15 ml', c:'29102'},
+  ojosLum:   {n:'NIVEA Cellular Luminous 630 Contorno de Ojos Anti-ojeras', c:'581207', img:'https://assets.beiersdorf.com/-/media/images/b/9/9/c/66819c4741e2410cb4c0987ff66cdd8b-web_1010x1180_transparent_png.png'},
+  ojosEpi:   {n:'NIVEA Cellular Epigenetics Sérum Contorno de Ojos 15 ml', c:'596443', img:'https://assets.beiersdorf.com/-/media/images/d/f/b/2/a7fb893793bb4066a0c0bed7e0c49737-web_1010x1180_transparent_png.png'},
+  spfInv:    {n:'NIVEA Sun Fluido Invisible FPS 50+ 40 ml', c:'589548', img:'https://img.nivea.com/-/media/miscellaneous/media-center-items/5/b/d/796215406b8f41ad8e2381ac05f1964e-web_1010x1180_transparent_png.png'},
+  spfDerma:  {n:'NIVEA Sun Derma Skin Clear Anti-imperfecciones FPS 50+ 40 ml', c:'589549', img:'https://assets.beiersdorf.com/-/media/images/3/f/d/c/5ba930b7e75d4376bcb1e656f0c89b76-web_1010x1180_transparent_png.png'},
+  spfLum:    {n:'NIVEA Cellular Luminous 630 Fluido FPS 50 40 ml', c:'577089'},
+  spfGlow:   {n:'NIVEA Skin Glow Protector Solar 40 ml', c:'595227', img:'https://assets.beiersdorf.com/-/media/images/3/3/7/4/a2ce42dda9074f13affa0f4c3ae7905a-web_1010x1180_transparent_png.png'},
+  spfQ10:    {n:'NIVEA Q10 Fluido UV Diario 40 ml', c:'592363'},
+  mascRoses: {n:'NIVEA Rose Care Mascarilla Hidratante con Ácido Hialurónico', c:'591944'},
+  peeling:   {n:'NIVEA Derma Skin Clear Peeling Exfoliante de Noche 40 ml', c:'592330', img:'https://assets.beiersdorf.com/-/media/images/1/9/7/6/582900c191734dfd8fadc498aece53e9-web_1010x1180_transparent_png.png'},
+};
+
+/* ---------- Encuesta ---------- */
+const Q = [
+  {k:'q1', t:'Un par de horas después de lavarte la cara, ¿cómo sientes tu piel?', o:[
+    ['Tirante o áspera','Necesito ponerme crema altiro',0],
+    ['Cómoda','Ni tirante ni con brillo',1],
+    ['Con brillo en frente, nariz y mentón','Las mejillas están bien',2],
+    ['Con brillo en toda la cara','',3]]},
+  {k:'q2', t:'A mitad del día, ¿cómo se ve tu piel?', o:[
+    ['Opaca, con zonas secas o que se descaman','',0],
+    ['Igual que en la mañana','',1],
+    ['Brilla en la zona T','Frente, nariz y mentón',2],
+    ['Brilla en toda la cara','',3]]},
+  {k:'q3', t:'¿Cómo ves tus poros frente al espejo?', o:[
+    ['Casi no se notan','',0],
+    ['Se notan un poco en la nariz','',1],
+    ['Se notan en nariz, frente y mentón','',2],
+    ['Se notan en casi toda la cara','',3]]},
+  {k:'q4', t:'¿Te salen granitos o puntos negros?', o:[
+    ['Casi nunca','',0],
+    ['De vez en cuando','Por ejemplo, antes de la menstruación o con estrés',1],
+    ['Seguido','',2]]},
+  {k:'q5', t:'Con productos nuevos, el sol o los cambios de clima, ¿tu piel se enrojece, pica o arde?', o:[
+    ['Casi nunca','',0],
+    ['A veces','',1],
+    ['Seguido','',2]]},
+  {k:'q6', multi:3, t:'¿Qué te gustaría mejorar?', h:'Puedes elegir hasta 3 opciones', o:[
+    ['Hidratación','Piel más suave y cómoda',  'hid'],
+    ['Granitos e imperfecciones','',           'imp'],
+    ['Manchas y tono disparejo','',            'man'],
+    ['Piel opaca, sin luminosidad','',         'glo'],
+    ['Primeras líneas de expresión','',        'lin'],
+    ['Arrugas y pérdida de firmeza','',        'arr']]},
+];
+
+const TYPE_NAME = {seca:'Seca', normal:'Normal', mixta:'Mixta', grasa:'Grasa'};
+const TYPE_DESC = {
+  seca:'Produce poco sebo y pierde hidratación con facilidad: se siente tirante y puede verse opaca.',
+  normal:'Está equilibrada: ni tirante ni con brillo. El foco es mantenerla hidratada y protegida.',
+  mixta:'Tiene brillo en la zona T (frente, nariz y mentón) y mejillas normales o secas.',
+  grasa:'Produce más sebo: brilla en toda la cara y los poros se notan más.'};
+const CONCERN = {hid:'Hidratación', imp:'Imperfecciones', man:'Manchas', glo:'Luminosidad', lin:'Primeras líneas', arr:'Arrugas y firmeza'};
+
+const S = {i:-1, a:{}, mode:null};
+const view = document.getElementById('view');
+
+function intro(){
+  view.innerHTML = `
+    <h1>Descubre la rutina ideal para tu piel</h1>
+    <p class="lead">Responde 6 preguntas rápidas y te recomendamos una rutina facial completa con productos NIVEA que encuentras en esta tienda.</p>
+    <ul class="steps-intro">
+      <li><span class="dot">1</span>Conoce tu tipo de piel</li>
+      <li><span class="dot">2</span>Elige qué quieres mejorar</li>
+      <li><span class="dot">3</span>Recibe tu rutina de día y de noche</li>
+    </ul>
+    <button class="btn" id="go">Comenzar</button>
+    <p class="note">Toma menos de 1 minuto. No te pedimos datos personales.</p>`;
+  document.getElementById('go').onclick = ()=>{S.i=0; question();};
+}
+
+function question(){
+  const q = Q[S.i], sel = S.a[q.k];
+  const isSel = j => q.multi ? (sel||[]).includes(j) : sel===j;
+  const ready = q.multi ? (sel||[]).length>0 : sel!==undefined;
+  view.innerHTML = `
+    <div class="progress"><span style="width:${(S.i)/Q.length*100}%"></span></div>
+    <div class="qcount">Pregunta ${S.i+1} de ${Q.length}</div>
+    <h2>${q.t}</h2>${q.h?`<p class="lead" style="margin-top:-8px">${q.h}</p>`:''}
+    <div class="opts">${q.o.map((o,j)=>`<button class="opt${isSel(j)?' sel':''}" data-j="${j}">${o[0]}${o[1]?`<small>${o[1]}</small>`:''}</button>`).join('')}</div>
+    <div class="row">
+      <button class="btn ghost" id="back">Atrás</button>
+      <button class="btn" id="next" ${ready?'':'disabled'}>${S.i===Q.length-1?'Ver mi rutina':'Siguiente'}</button>
+    </div>`;
+  view.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+    const j=+b.dataset.j;
+    if (q.multi){
+      let cur=(S.a[q.k]||[]).slice();
+      if (cur.includes(j)) cur=cur.filter(x=>x!==j);
+      else { if (cur.length>=q.multi) cur.shift(); cur.push(j); }
+      S.a[q.k]=cur;
+      view.querySelectorAll('.opt').forEach(x=>x.classList.toggle('sel', cur.includes(+x.dataset.j)));
+      document.getElementById('next').disabled = cur.length===0;
+    } else {
+      S.a[q.k]=j;
+      view.querySelectorAll('.opt').forEach(x=>x.classList.remove('sel')); b.classList.add('sel');
+      document.getElementById('next').disabled=false;
+      setTimeout(next, 180);
+    }
+  });
+  document.getElementById('back').onclick=()=>{ if(S.i===0){S.i=-1;intro();} else {S.i--;question();} };
+  document.getElementById('next').onclick=next;
+  window.scrollTo(0,0);
+}
+function next(){ const v=S.a[Q[S.i].k]; if(v===undefined || (Array.isArray(v)&&!v.length)) return; if(S.i<Q.length-1){S.i++;question();} else result(); }
+
+/* ---------- Lógica de diagnóstico ---------- */
+function diagnose(){
+  const v = k => Q.find(q=>q.k===k).o[S.a[k]][2];
+  const oil = (v('q1')+v('q2')+v('q3'))/3;
+  const type = oil < 0.75 ? 'seca' : oil < 1.5 ? 'normal' : oil < 2.4 ? 'mixta' : 'grasa';
+  const sens = v('q5')===2 || (v('q5')===1 && type==='seca');
+  const breakouts = v('q4');
+  const q6 = Q.find(q=>q.k==='q6');
+  const concerns = (S.a.q6||[]).map(j=>q6.o[j][2]);
+  return {type, sens, breakouts, concerns};
+}
+
+function routine(d){
+  const {type, sens, concerns} = d;
+  const has = c => concerns.includes(c);
+  const oily = type==='mixta' || type==='grasa';
+  // limpieza (prioridad: sensible > imperfecciones > luminosidad > manchas > arrugas > base)
+  let clean = type==='seca' ? P.micSeca : type==='grasa' ? P.gelDerma : P.gelRoses;
+  if (sens) clean = P.micSens;
+  else if (has('imp') && oily) clean = P.gelDerma;
+  else if (has('glo')) clean = P.gelGlow;
+  else if (has('man') && !oily) clean = P.micIlum;
+  else if (has('arr') && !oily) clean = P.micRegen;
+  // hidratantes (prioridad: arrugas > primeras líneas > base)
+  let day = {seca:P.diaSeca, normal:P.diaNormal, mixta:P.diaRoses, grasa:P.diaDerma}[type];
+  if (has('hid') && type!=='seca') day = P.diaRoses;
+  let night = type==='seca' ? P.nocheSeca : P.diaRoses; // gel crema Rose Care: sin FPS, apta día y noche
+  if (has('arr')) { day = P.diaEpi; night = P.nocheEpi; }
+  else if (has('lin')) { day = P.diaQ10; night = P.nocheQ10; }
+  else if (has('man')) { night = P.nocheLum; }
+  // contorno
+  const eyes = has('arr') ? P.ojosEpi : has('lin') ? P.ojosQ10 : has('man') ? P.ojosLum : null;
+  // protector (prioridad: manchas > imperfecciones piel grasa/mixta > luminosidad > primeras líneas > base)
+  let spf = type==='grasa' ? P.spfDerma : P.spfInv;
+  if (has('man')) spf = P.spfLum;
+  else if (has('imp') && oily) spf = P.spfDerma;
+  else if (has('glo')) spf = P.spfGlow;
+  else if (has('lin')) spf = P.spfQ10;
+  // sérums: máximo uno de día y uno de noche
+  const cand = [];
+  if (has('arr')) cand.push({p:P.serEpi, pref:'pm', age:true, w:'Rejuvenece la piel desde las células y mejora la firmeza.'});
+  else if (has('lin')) cand.push({p:P.serQ10, pref:'pm', age:true, w:'Rellena y suaviza las primeras líneas.'});
+  if (has('man')) cand.push({p:P.serLum, pref:'am', w:'Trata las manchas y empareja el tono. Aplica 2 o 3 gotas.'});
+  if (has('imp')) cand.push({p:P.serDerma, pref:'pm', w:'Reduce granitos y marcas. Aplica en toda la cara o en las zonas con imperfecciones.'});
+  if (has('glo') && !has('man')) cand.push({p:P.serGlow, pref:'am', w:'Unifica el tono y da luminosidad. Aplica 2 o 3 gotas.'});
+  let serAM=null, serPM=null;
+  for (const c of cand){
+    if (c.pref==='am' && !serAM) serAM=c;
+    else if (c.pref==='pm' && !serPM) serPM=c;
+    else if (!serAM && !c.age) serAM=c;
+    else if (!serPM) serPM=c;
+  }
+  // tónico y semanal
+  let tonic = null;
+  if (!sens && has('glo')) tonic = P.tonGlow;
+  else if (!sens && has('hid')) tonic = P.mistRoses;
+  const wk = [];
+  if (!sens && has('imp') && !has('glo')) wk.push({s:'Exfoliación', p:P.peeling, w:'1 o 2 noches a la semana, en reemplazo del sérum. No lo combines con otros exfoliantes.'});
+  if (has('hid') || type==='seca') wk.push({s:'Mascarilla', p:P.mascRoses, w:'1 o 2 veces a la semana, sobre la piel limpia.'});
+
+  const am = [], pm = [];
+  am.push({s:'Limpieza', p:clean, w: sens ? 'Limpia sin frotar: empapa un algodón y pásalo con suavidad.' : 'Retira el sebo y las impurezas de la noche.'});
+  if (tonic) am.push({s:'Tónico', p:tonic, w: tonic===P.tonGlow ? 'Afina la textura y aporta luminosidad. Al principio úsalo día por medio.' : 'Refresca e hidrata. Vaporiza sobre la cara limpia.'});
+  if (serAM) am.push({s:'Sérum', p:serAM.p, w:serAM.w});
+  am.push({s:'Hidratante de día', p:day, w: day===P.diaEpi ? 'Rejuvenece y protege con FPS 30.' : day===P.diaQ10 ? 'Suaviza las primeras líneas y protege del sol.' : day===P.diaDerma ? 'Hidrata, controla el brillo hasta 8 horas y protege con FPS 50+.' : 'Hidrata y prepara la piel para el día.'});
+  if (!(day===P.diaDerma && spf===P.spfDerma)) am.push({s:'Protector solar', p:spf, w:'El paso más importante para prevenir manchas y envejecimiento. Reaplica cada 2 a 3 horas si estás al sol.'});
+  const pmClean = has('imp') && oily && !sens ? P.micDerma : clean;
+  pm.push({s:'Limpieza', p:pmClean, w: pmClean===P.micDerma ? 'Desmaquilla y destapa los poros; luego enjuaga con el gel limpiador.' : 'Retira el maquillaje, el protector y la contaminación del día.'});
+  if (serPM) pm.push({s:'Sérum', p:serPM.p, w:serPM.w});
+  if (eyes) pm.push({s:'Contorno de ojos', p:eyes, w:'Aplica con toques suaves del dedo anular, desde el lagrimal hacia afuera.'});
+  pm.push({s:'Crema de noche', p:night, w: night===P.diaRoses ? 'Gel crema liviano con ácido hialurónico: hidrata sin engrasar mientras duermes.' : 'Repara y regenera la piel mientras duermes.'});
+  return {am, pm, wk};
+}
+
+function result(){
+  const d = diagnose(); const r = routine(d);
+  const tags = `<span class="tag">Piel ${TYPE_NAME[d.type].toLowerCase()}${d.sens?' y sensible':''}</span>` + d.concerns.map(c=>`<span class="tag alt">${CONCERN[c]}</span>`).join('');
+  let n = 0;
+  const block = (title, arr) => arr.length ? `<div class="moment"><h3>${title}</h3>${arr.map(x=>`
+      <div class="card"><div class="num">${++n}</div>${x.p.img?`<img class="thumb" src="${x.p.img}" alt="" loading="lazy" onerror="this.remove()">`:''}<div>
+        <div class="step">${x.s}</div><div class="prod">${x.p.n}</div><div class="why">${x.w}</div></div></div>`).join('')}</div>` : '';
+  const all = [...r.am, ...r.pm, ...r.wk].map(x=>x.p).filter((p,i,a)=>a.indexOf(p)===i);
+  view.innerHTML = `
+    <div class="result-top">
+      <div class="qcount" style="margin-bottom:6px">Tu resultado</div>
+      <h1 style="margin-top:0">Tu piel es ${TYPE_NAME[d.type].toLowerCase()}${d.sens?' y sensible':''}</h1>
+      <p class="lead" style="margin-bottom:10px">${TYPE_DESC[d.type]}${d.sens?' Además reacciona con facilidad, así que elegimos productos suaves y sin exfoliantes.':''}</p>
+      ${tags}
+    </div>
+    ${block('Mañana', r.am)}${(n=0,'')}
+    ${block('Noche', r.pm)}${(n=0,'')}
+    ${block('1 o 2 veces por semana', r.wk)}
+    <h3 style="font-size:16px;color:var(--navy);margin:4px 0 8px">Tu lista para llevar</h3>
+    <ul class="list">${all.map(p=>`<li>${p.n}</li>`).join('')}</ul>
+    ${d.breakouts===2 && !d.concerns.includes('imp') ? '<p class="note" style="border:0;padding:0">Nos contaste que te salen granitos seguido: si quieres tratarlos, repite la encuesta eligiendo "Granitos e imperfecciones".</p>':''}
+    <p class="note">Muestra esta pantalla en la góndola NIVEA o a un vendedor para encontrar tus productos. Empieza con un producto nuevo a la vez y suma el siguiente después de unos días.</p>
+    <button class="btn ghost" id="again" style="margin-top:14px">Volver a empezar</button>`;
+  document.getElementById('again').onclick=()=>{S.i=-1;S.a={};intro();};
+  window.scrollTo(0,0);
+}
+intro();
+</script>
+</body>
+</html>
