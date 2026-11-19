@@ -69,7 +69,7 @@
 /* ---------- Registro de respuestas en Google Sheets ----------
    Pega aquí la URL /exec de la aplicación web de Apps Script (ver Codigo.gs).
    Si queda vacía, la encuesta funciona igual pero no registra respuestas. */
-const ENDPOINT = '';
+const ENDPOINT = 'https://script.google.com/macros/s/AKfycbwCej1DNg08TT5guPdDUYBeokA-3W-J3uD0_9f_NCuerkA-wf8cNhlc-hJOweQ_TSAM/exec';
 
 function registrar(d, r){
   if (!ENDPOINT) return;
