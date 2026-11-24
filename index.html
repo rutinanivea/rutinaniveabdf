@@ -129,7 +129,7 @@ const P = {
 
 /* ---------- Encuesta ---------- */
 const Q = [
-  {k:'q1', t:'Una hora después de lavarte la cara, ¿cómo sientes tu piel?', o:[
+  {k:'q1', t:'Una hora después de lavarte el rostro, ¿cómo sientes tu piel?', o:[
     ['Tirante o áspera','Necesito ponerme crema altiro',0],
     ['Cómoda','Ni tirante ni con brillo',1],
     ['Con brillo en frente, nariz y mentón','Las mejillas están bien',2],
@@ -178,8 +178,8 @@ function intro(){
     <p class="lead">Responde 6 preguntas rápidas y te recomendamos una rutina facial completa con productos NIVEA que encuentras en esta tienda.</p>
     <ul class="steps-intro">
       <li><span class="dot">1</span>Conoce tu tipo de piel</li>
-      <li><span class="dot">2</span>Elige qué quieres mejorar</li>
-      <li><span class="dot">3</span>Recibe tu rutina de día y de noche</li>
+      <li><span class="dot">2</span>Principal beneficio deseado</li>
+      <li><span class="dot">3</span>Recomendación de rutina de día y noche</li>
     </ul>
     <button class="btn" id="go">Comenzar</button>
     <p class="note">Toma menos de 1 minuto.<br><br><strong>Sobre tus respuestas:</strong> la encuesta es anónima y voluntaria. No te pedimos nombre, RUT, correo, teléfono ni otros datos que te identifiquen. Guardamos solo tus respuestas y la rutina recomendada, sin asociarlas a ninguna persona, para fines estadísticos y para mejorar estas recomendaciones. No se usan para contactarte ni se venden a terceros.</p>`;
@@ -264,7 +264,7 @@ function routine(d){
   if (has('arr')) cand.push({p:P.serEpi, pref:'pm', age:true, w:'Rejuvenece la piel desde las células y mejora la firmeza.'});
   else if (has('lin')) cand.push({p:P.serQ10, pref:'pm', age:true, w:'Rellena y suaviza las primeras líneas.'});
   if (has('man')) cand.push({p:P.serLum, pref:'am', w:'Trata las manchas y empareja el tono. Aplica 2 o 3 gotas.'});
-  if (has('imp')) cand.push({p:P.serDerma, pref:'pm', w:'Reduce granitos y marcas. Aplica en toda la cara o en las zonas con imperfecciones.'});
+  if (has('imp')) cand.push({p:P.serDerma, pref:'pm', w:'Reduce granitos y marcas. Aplica en todo el rostro o en las zonas con imperfecciones.'});
   if (has('glo') && !has('man')) cand.push({p:P.serGlow, pref:'am', w:'Unifica el tono y da luminosidad. Aplica 2 o 3 gotas.'});
   let serAM=null, serPM=null;
   for (const c of cand){
@@ -283,7 +283,7 @@ function routine(d){
 
   const am = [], pm = [];
   am.push({s:'Limpieza', p:clean, w: sens ? 'Limpia sin frotar: empapa un algodón y pásalo con suavidad.' : 'Retira el sebo y las impurezas de la noche.'});
-  if (tonic) am.push({s:'Tónico', p:tonic, w: tonic===P.tonGlow ? 'Afina la textura y aporta luminosidad. Al principio úsalo día por medio.' : 'Refresca e hidrata. Vaporiza sobre la cara limpia.'});
+  if (tonic) am.push({s:'Tónico', p:tonic, w: tonic===P.tonGlow ? 'Afina la textura y aporta luminosidad. Al principio úsalo día por medio.' : 'Refresca e hidrata. Vaporiza sobre el rostro limpio.'});
   if (serAM) am.push({s:'Sérum', p:serAM.p, w:serAM.w});
   am.push({s:'Hidratante de día', p:day, w: day===P.diaEpi ? 'Rejuvenece y protege con FPS 30.' : day===P.diaQ10 ? 'Suaviza las primeras líneas y protege del sol.' : day===P.diaDerma ? 'Hidrata, controla el brillo hasta 8 horas y protege con FPS 50+.' : 'Hidrata y prepara la piel para el día.'});
   if (!(day===P.diaDerma && spf===P.spfDerma)) am.push({s:'Protector solar', p:spf, w:'El paso más importante para prevenir manchas y envejecimiento. Reaplica cada 2 a 3 horas si estás al sol.'});
