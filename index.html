@@ -130,32 +130,32 @@ const P = {
 /* ---------- Encuesta ---------- */
 const Q = [
   {k:'q1', t:'Una hora después de lavarte el rostro, ¿cómo sientes tu piel?', o:[
-    ['Tirante o áspera','Necesito ponerme crema altiro',0],
+    ['Tirante o áspera','Necesito aplicar crema de inmediato',0],
     ['Cómoda','Ni tirante ni con brillo',1],
     ['Con brillo en frente, nariz y mentón','Las mejillas están bien',2],
-    ['Con brillo en toda la cara','',3]]},
+    ['Con brillo en todo el rostro','',3]]},
   {k:'q2', t:'A mitad del día, ¿cómo se ve tu piel?', o:[
     ['Opaca, con zonas secas o que se descaman','',0],
     ['Igual que en la mañana','',1],
     ['Brilla en la zona T','Frente, nariz y mentón',2],
-    ['Brilla en toda la cara','',3]]},
+    ['Brilla en todo el rostro','',3]]},
   {k:'q3', t:'¿Cómo ves tus poros frente al espejo?', o:[
     ['Casi no se notan','',0],
     ['Se notan un poco en la nariz','',1],
     ['Se notan en nariz, frente y mentón','',2],
-    ['Se notan en casi toda la cara','',3]]},
-  {k:'q4', t:'¿Te salen granitos o puntos negros?', o:[
+    ['Se notan en casi todo el rostro','',3]]},
+  {k:'q4', t:'¿Sueles tener granos y/o puntos negros?', o:[
     ['Casi nunca','',0],
-    ['De vez en cuando','Por ejemplo, antes de la menstruación o con estrés',1],
+    ['De vez en cuando','Por ejemplo, en periodos de cambios hormonales o de alto estrés',1],
     ['Seguido','',2]]},
-  {k:'q5', t:'¿tu piel se enrojece, pica o arde? Con productos nuevos, el sol o los cambios de clima', o:[
+  {k:'q5', t:'¿Tu piel se enrojece, pica o arde? Con productos nuevos, el sol o los cambios de clima', o:[
     ['Casi nunca','',0],
     ['A veces','',1],
     ['Seguido','',2]]},
-  {k:'q6', multi:3, t:'¿Qué te gustaría mejorar?', h:'Puedes elegir hasta 3 opciones', o:[
-    ['Hidratación','Piel más suave y cómoda',  'hid'],
+  {k:'q6', multi:3, t:'¿Cuál es tu principal beneficio buscado?', h:'Puedes elegir hasta 3 opciones', o:[
+    ['Hidratación','Piel más suave y humectada',  'hid'],
     ['Granitos e imperfecciones','',           'imp'],
-    ['Manchas y tono disparejo','',            'man'],
+    ['Manchas y tono uniforme','',            'man'],
     ['Piel opaca, sin luminosidad','',         'glo'],
     ['Primeras líneas de expresión','',        'lin'],
     ['Arrugas y pérdida de firmeza','',        'arr']]},
@@ -166,7 +166,7 @@ const TYPE_DESC = {
   seca:'Produce poco sebo y pierde hidratación con facilidad: se siente tirante y puede verse opaca.',
   normal:'Está equilibrada: ni tirante ni con brillo. El foco es mantenerla hidratada y protegida.',
   mixta:'Tiene brillo en la zona T (frente, nariz y mentón) y mejillas normales o secas.',
-  grasa:'Produce más sebo: brilla en toda la cara y los poros se notan más.'};
+  grasa:'Produce más sebo: brilla en todo el rostro y los poros se notan más.'};
 const CONCERN = {hid:'Hidratación', imp:'Imperfecciones', man:'Manchas', glo:'Luminosidad', lin:'Primeras líneas', arr:'Arrugas y firmeza'};
 
 const S = {i:-1, a:{}, mode:null};
